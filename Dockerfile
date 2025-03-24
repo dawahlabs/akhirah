@@ -1,5 +1,5 @@
 # Start from a minimal base image
-FROM golang:1.21 as builder
+FROM golang:1.23 as builder
 WORKDIR /app
 
 # Copy Go modules and download dependencies
