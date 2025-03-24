@@ -42,7 +42,7 @@ jobs:
           # Update the image tag in deployment.yaml inside apps/akhirah/
           sed -i "s|image: registry.digitalocean.com/dawahlabs-registry/akhirah:.*|image: registry.digitalocean.com/dawahlabs-registry/akhirah:${{ env.COMMIT_HASH }}|" apps/akhirah/deployment.yaml
 
-          git config user.name "${{ github.actor }}"
+          git config user.name "fayazp088"
           git config user.email "fayazp088@gmail.com"
 
           git add apps/akhirah/deployment.yaml
