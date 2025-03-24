@@ -1,0 +1,31 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main # Change this if needed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate commit hash
+        id: vars
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Log in to DigitalOcean Container Registry
+        run:
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.digitalocean.com -u "${{
+          secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t registry.digitalocean.com/dawah-labs-registry/akhirah-api:${{ env.COMMIT_HASH }} .
+
+      - name: Push Docker image to DOCR
+        run: |
+          docker push registry.digitalocean.com/dawah-labs-registry/akhirah-api:${{ env.COMMIT_HASH }}
