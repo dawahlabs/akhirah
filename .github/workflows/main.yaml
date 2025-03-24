@@ -19,7 +19,7 @@ jobs:
 
       - name: Log in to DigitalOcean Container Registry
         run: |
-          echo "${{ secrets.DOCR_PASSWORD }}" | docker login registry.digitalocean.com -u "${{ secrets.DOCR_USERNAME }}" --password-stdin
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.digitalocean.com -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Verify Login (Debug)
         run: docker info
