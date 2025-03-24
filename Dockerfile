@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN go build -o main ./apis/services/akhirah/main.go
+RUN go build -o main ./apis/services/akhirah
 
 # Use a lightweight base image for production
 FROM alpine:latest
