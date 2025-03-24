@@ -36,15 +36,15 @@ jobs:
 
       - name: Update Cosmos Repo with New Image Tag
         run: |
-          git clone https://github.com/your-org/cosmos.git
+          git clone https://github.com/dawahlabs/cosmos.git
           cd cosmos
 
           # Update the image tag in deployment.yaml inside apps/akhirah/
           sed -i "s|image: registry.digitalocean.com/dawahlabs-registry/akhirah:.*|image: registry.digitalocean.com/dawahlabs-registry/akhirah:${{ env.COMMIT_HASH }}|" apps/akhirah/deployment.yaml
 
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name "${{ github.actor }}"
+          git config user.email "fayazp088@gmail.com"
 
           git add apps/akhirah/deployment.yaml
           git commit -m "Update Akhirah image to ${{ env.COMMIT_HASH }}"
-          git push https://${{ secrets.GH_PAT }}@github.com/your-org/cosmos.git main
+          git push https://${{ secrets.GH_PAT }}@github.com/dawahlabs/cosmos.git main
