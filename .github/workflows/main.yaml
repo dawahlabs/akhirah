@@ -36,7 +36,7 @@ jobs:
 
       - name: Update Cosmos Repo with New Image Tag
         run: |
-          git clone https://github.com/dawahlabs/cosmos.git
+          git clone https://${{ secrets.GH_PAT }}@github.com/dawahlabs/cosmos.git
           cd cosmos
 
           # Update the image tag in deployment.yaml inside apps/akhirah/
