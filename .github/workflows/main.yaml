@@ -26,7 +26,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t registry.digitalocean.com/dawahlabs-registry/akhirah:${{ env.COMMIT_HASH }} .
+          docker build -t registry.digitalocean.com/dawahlabs-registry/akhirah:${{ env.COMMIT_HASH }} -f zarf/docker/dockerfile.akhirah .
           docker tag registry.digitalocean.com/dawahlabs-registry/akhirah:${{ env.COMMIT_HASH }} registry.digitalocean.com/dawahlabs-registry/akhirah:latest
 
       - name: Push Docker image to DOCR

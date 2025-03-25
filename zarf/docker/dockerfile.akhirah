@@ -1,0 +1,46 @@
+# Build the Go Binaries
+FROM golang:1.24 AS build_akhirah
+ENV CGO_ENABLED=0
+ARG BUILD_REF
+
+# Create the service directory and copy module files first.
+RUN mkdir /service
+COPY go.* /service/
+WORKDIR /service
+RUN go mod download
+
+# Copy the source code into the container.
+COPY . /service
+
+# Build the 'akhirah' binary
+WORKDIR /service/api/services/akhirah
+RUN go build -ldflags "-X main.build=${BUILD_REF}" -o akhirah
+
+# Build the 'logfmt' binary
+WORKDIR /service/api/tooling/logfmt
+RUN go build -o logfmt
+
+# Run the Go Binaries in Alpine
+FROM alpine:3.21
+ARG BUILD_DATE
+ARG BUILD_REF
+
+RUN addgroup -g 1000 -S akhirah && \
+    adduser -u 1000 -h /akhirah -G akhirah -S akhirah
+
+# Copy both binaries from the builder stage
+COPY --from=build_akhirah --chown=akhirah:akhirah /service/api/services/akhirah/akhirah /service/akhirah
+COPY --from=build_akhirah --chown=akhirah:akhirah /service/api/tooling/logfmt/logfmt /service/logfmt
+
+WORKDIR /service
+USER akhirah
+
+# Run 'akhirah' and pipe its output to 'logfmt'
+CMD ["sh", "-c", "./akhirah | ./logfmt"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="akhirah-api" \
+      org.opencontainers.image.authors="fayaz <fayaz@dawahlabs.com>" \
+      org.opencontainers.image.source="https://github.com/dawahlabs/akhirah/tree/main/api/services/akhirah" \
+      org.opencontainers.image.revision="${BUILD_REF}" \
+      org.opencontainers.image.vendor="DawahLabs"
