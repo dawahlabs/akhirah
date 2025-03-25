@@ -40,4 +40,4 @@ akhirah:
 		.
 
 run:
-	@go run apis/services/akhirah/main.go | go run apis/tooling/logfmt/main.go
+	@go run api/services/akhirah/main.go | go run api/tooling/logfmt/main.go
