@@ -7,4 +7,9 @@ require (
 	github.com/arl/statsviz v0.6.0
 )
 
-require github.com/gorilla/websocket v1.5.0 // indirect
+require (
+	github.com/google/go-cmp v0.5.5 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
+)
