@@ -94,13 +94,22 @@ func (log *Logger) write(ctx context.Context, level Level, caller int, msg strin
 	var pcs [1]uintptr
 	runtime.Callers(caller, pcs[:])
 
-	r := slog.NewRecord(time.Now(), slogLevel, msg, pcs[0])
+	// Load IST timezone
+	loc, err := time.LoadLocation("Asia/Kolkata")
+	if err != nil {
+		loc = time.UTC // Fallback to UTC if IST load fails
+	}
 
+	// Create a new log record with IST timestamp
+	r := slog.NewRecord(time.Now().In(loc), slogLevel, msg, pcs[0])
+
+	// Append trace ID if available
 	if log.traceIDFn != nil {
 		args = append(args, "trace_id", log.traceIDFn(ctx))
 	}
 	r.Add(args...)
 
+	// Handle the log record
 	log.handler.Handle(ctx, r)
 }
 
