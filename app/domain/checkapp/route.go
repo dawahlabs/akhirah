@@ -7,4 +7,5 @@ func Routes(app *web.App) {
 	api := newApp("1.0.0")
 	app.HandlerFunc("GET /liveness", api.liveness)
 	app.HandlerFunc("GET /readiness", api.readiness)
+	app.HandlerFunc("GET /testPanic", api.testPanic)
 }

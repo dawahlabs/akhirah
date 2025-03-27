@@ -38,3 +38,9 @@ func (a *app) readiness(ctx context.Context, w http.ResponseWriter, h *http.Requ
 
 	return nil
 }
+
+func (a *app) testPanic(ctx context.Context, w http.ResponseWriter, h *http.Request) error {
+	panic("We are panicking!!!!🦁")
+
+	return nil
+}
