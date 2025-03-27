@@ -38,6 +38,33 @@ func NewApp(shutdown chan os.Signal, mw ...MidFunc) *App {
 	}
 }
 
+// HandleNoMiddleware sets a handler function for a given HTTP method and path pair
+// to the application server mux. Does not include the application middleware or
+// OTEL tracing.
+func (a *App) HandleNoMiddleware(path string, handler HandlerFunc) {
+	h := func(w http.ResponseWriter, r *http.Request) {
+		v := Values{
+			TraceID: uuid.NewString(),
+			// Tracer:  nil,
+			Now: time.Now().UTC(),
+		}
+		ctx := setValues(r.Context(), &v)
+
+		if err := handler(ctx, w, r); err != nil {
+			// a.log(ctx, "web", "ERROR", err)
+			return
+		}
+	}
+
+	finalPath := path
+	// if group != "" {
+	// 	finalPath = "/" + group + path
+	// }
+	// finalPath = fmt.Sprintf("%s %s", method, finalPath)
+
+	a.HandleFunc(finalPath, h)
+}
+
 // HandlerFunc sets a handler function for a given HTTP method and path pair
 // to the application server mux.
 func (a *App) HandlerFunc(path string, handlerFunc HandlerFunc, mw ...MidFunc) {
