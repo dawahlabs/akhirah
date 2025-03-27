@@ -16,6 +16,7 @@ import (
 	"github.com/dawahlabs/akhirah/app/sdk/debug"
 	"github.com/dawahlabs/akhirah/app/sdk/mux"
 	"github.com/dawahlabs/akhirah/foundation/logger"
+	"github.com/dawahlabs/akhirah/foundation/web"
 )
 
 var build = "develop"
@@ -30,7 +31,7 @@ func main() {
 	}
 
 	traceIDFn := func(ctx context.Context) string {
-		return ""
+		return web.GetTraceID(ctx)
 		// return otel.GetTraceID(ctx)
 	}
 
@@ -116,7 +117,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      mux.WebAPI(),
+		Handler:      mux.WebAPI(shutdown, log),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,
